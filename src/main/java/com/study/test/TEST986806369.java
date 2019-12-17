@@ -1,35 +1,33 @@
 package com.study.test;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 
 public class TEST986806369 {
-    public static void main(String[] args) {
-        HashMap<String,Object> map1 = new HashMap<>();
-        map1.put("a","aa");
-        map1.put("b","bbbbb");
-        map1.put("b","bb");
-        map1.put("c","cc");
-        map1.put("d","dd");
-        map1.put("e","ee");
-        map1.put("f","ff");
-        map1.put("g","gg");
-        map1.put("h","hh");
-        map1.put("i","ii");
-        map1.put("j","jj");
-        map1.put("1","jj");
-        map1.put("2","jj");
-        map1.put("3","jj");
-        map1.put("4","jj");
-        map1.put("5","jj");
-        map1.put("6","jj");
-        map1.put("7","jj");
-        map1.put("8","jj");
-        map1.put("9","jj");
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
-        map.put("a","ykl");
-        int a = 12 << 1;
-        System.out.println(a);
+    private static Charset charset = Charset.forName("UTF8");// 创建GBK字符集
+    public static void main(String[] args) throws Exception {
+        SocketChannel channel = SocketChannel.open(new InetSocketAddress("www.aliyun.com", 80));
+        channel.configureBlocking(false);
+        String str = "GET / HTTP/1.1 \r\n";
+        str+="Host: www.aliyun.com\r\n";
+        str+="Sec-Fetch-Mode: navigate\r\n";
+//		str+="Sec-Fetch-User: ?1\r\n";
+//		str+="Upgrade-Insecure-Requests: 1\r\n";
+        str+="SUser-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36\r\n";
+        str+="\r\n";
+        channel.write(charset.encode(str));
+        ByteBuffer buffer = ByteBuffer.allocate(1024); // 创建1024字节的缓冲
+        int size = channel.read(buffer);
+        while (size != -1) {
+            buffer.flip();
+            while (buffer.hasRemaining()) {
+                System.out.println(charset.decode(buffer));
+            }
+            buffer.clear();
+            size = channel.read(buffer);
+        }
     }
 
 }
