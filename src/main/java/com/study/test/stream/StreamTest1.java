@@ -73,5 +73,25 @@ public class StreamTest1 {
             return Tools.toString(e1.get("name")).compareTo(Tools.toString(e2.get("name")));
         }).collect(Collectors.toList());
         System.out.println("sorted 结果: " + sorted_list);
+
+        // 排序后,取第一条
+        List<Map<String,Object>> sortedAndLimit_list = list.stream().sorted((e1,e2) -> {
+            return Tools.toString(e1.get("name")).compareTo(Tools.toString(e2.get("name")));
+        }).limit(1).collect(Collectors.toList());
+        System.out.println("sortedAndLimit_list 结果: " + sortedAndLimit_list);
+
+        // 去重(distinct),排序(sorted)后,取前3条
+        List<Map<String,Object>> sortedAndDistinctAndLimit_list = list.stream().distinct().sorted((e1,e2) -> {
+            return Tools.toString(e1.get("name")).compareTo(Tools.toString(e2.get("name")));
+        }).limit(3).filter((c) -> {
+            return c.containsValue("天明");
+        }).collect(Collectors.toList());
+        System.out.println("sortedAndDistinctAndLimit_list 结果: " + sortedAndDistinctAndLimit_list);
+
+        String msg = list.stream().map(p -> {
+            String str = "单号:" + Tools.toString(p.get("name")) + " ; SKU: 【" + Tools.toString(p.get("name")) + "】\n";
+            return str;
+        }).collect(Collectors.joining(","));
+        System.out.println("将list数据拼接成string字符串 结果: " + msg);
     }
 }
